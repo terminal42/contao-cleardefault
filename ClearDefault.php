@@ -19,7 +19,7 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2009
+ * @copyright  Andreas Schempp 2009-2010
  * @author     Andreas Schempp <andreas@schempp.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
@@ -37,7 +37,7 @@ class ClearDefault extends Frontend
 	{
 		if ($objWidget->cleardefault)
 		{
-			$objWidget->style .= '" onblur="if (this.value==\'\') { this.value=\'' . str_replace("'", "\'", $objWidget->value) . '\'; this.addClass(\'cleardefault\'); }" onfocus="if (this.value==\'' . str_replace("'", "\'", $objWidget->value) . '\') { this.value=\'\'; this.removeClass(\'cleardefault\'); this.select(); }';
+			$objWidget->style .= '" onblur="if (this.value==\'\') { this.value=\'' . str_replace("'", "\'", $objWidget->value) . '\'; $(this).addClass(\'cleardefault\'); }" onfocus="if (this.value==\'' . str_replace("'", "\'", $objWidget->value) . '\') { this.value=\'\'; $(this).removeClass(\'cleardefault\'); this.select(); }';
 			
 			// Cannot use $this->Input->post() because it would find session data
 			if (!strlen($_POST[$objWidget->name]) || $_POST[$objWidget->name] == $objWidget->value)
