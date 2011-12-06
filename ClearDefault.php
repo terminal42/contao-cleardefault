@@ -30,6 +30,7 @@
  */
 class ClearDefault extends Frontend
 {
+
 	/**
 	 * Add cleardefault-javascript
 	 */
@@ -37,13 +38,9 @@ class ClearDefault extends Frontend
 	{
 		if ($objWidget->cleardefault)
 		{
-			$objWidget->style .= '" onblur="if (this.value==\'\') { this.value=\'' . str_replace("'", "\'", $objWidget->value) . '\'; $(this).addClass(\'cleardefault\'); }" onfocus="if (this.value==\'' . str_replace("'", "\'", $objWidget->value) . '\') { this.value=\'\'; $(this).removeClass(\'cleardefault\'); this.select(); }';
+			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/html/cleardefault.js';
 			
-			// Cannot use $this->Input->post() because it would find session data
-			if ($_POST[$objWidget->name] == '' || $_POST[$objWidget->name] == $objWidget->value)
-			{
-				$objWidget->class = 'cleardefault';
-			}
+			$objWidget->style .= '" placeholder="' . specialchars($objWidget->value) . '';
 			
 			// Unset POST value if the default was submitted
 			if ($_POST[$objWidget->name] == $objWidget->value)
