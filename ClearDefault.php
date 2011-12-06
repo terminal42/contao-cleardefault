@@ -40,9 +40,16 @@ class ClearDefault extends Frontend
 			$objWidget->style .= '" onblur="if (this.value==\'\') { this.value=\'' . str_replace("'", "\'", $objWidget->value) . '\'; $(this).addClass(\'cleardefault\'); }" onfocus="if (this.value==\'' . str_replace("'", "\'", $objWidget->value) . '\') { this.value=\'\'; $(this).removeClass(\'cleardefault\'); this.select(); }';
 			
 			// Cannot use $this->Input->post() because it would find session data
-			if (!strlen($_POST[$objWidget->name]) || $_POST[$objWidget->name] == $objWidget->value)
+			if ($_POST[$objWidget->name] == '' || $_POST[$objWidget->name] == $objWidget->value)
 			{
 				$objWidget->class = 'cleardefault';
+			}
+			
+			// Unset POST value if the default was submitted
+			if ($_POST[$objWidget->name] == $objWidget->value)
+			{
+				$this->Input->setPost($objWidget->name, null);
+				unset($_SESSION['FORM_DATA'][$objWidget->name]);
 			}
 		}
 		
@@ -55,23 +62,13 @@ class ClearDefault extends Frontend
 	 */
 	public function validateFormField($objWidget, $formId)
 	{
-		if ($objWidget->cleardefault)
+		if ($objWidget->cleardefault && !$objWidget->value)
 		{
 			$objField = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
 									   ->limit(1)
 									   ->execute($objWidget->id);
-									   
-			if ($objField->value == $objWidget->value)
-			{
-				if ($objWidget->mandatory)
-				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $objWidget->label));
-				}
-				else
-				{
-					$objWidget->value = '';
-				}
-			}
+			
+			$objWidget->value = $objField->value;
 		}
 		
 		return $objWidget;
