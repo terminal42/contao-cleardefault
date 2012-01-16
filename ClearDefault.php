@@ -41,6 +41,7 @@ class ClearDefault extends Frontend
 			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/html/cleardefault.js';
 			
 			$objWidget->style .= '" placeholder="' . specialchars($objWidget->value) . '';
+			$objWidget->value = '';
 			
 			// Unset POST value if the default was submitted
 			if ($_POST[$objWidget->name] == $objWidget->value)
@@ -64,8 +65,6 @@ class ClearDefault extends Frontend
 			$objField = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
 									   ->limit(1)
 									   ->execute($objWidget->id);
-			
-			$objWidget->value = $objField->value;
 		}
 		
 		return $objWidget;
