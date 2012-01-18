@@ -15,3 +15,4 @@
 CREATE TABLE `tl_form_field` (
   `cleardefault` char(1) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
