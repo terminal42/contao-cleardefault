@@ -3,9 +3,10 @@ window.addEvent('domready', function()
 	// Check if Browser supports the "placeholder" attribute
 	if (!('placeholder' in new Element('input', {type:'text'})))
 	{
-		document.getElements('input[placeholder]').each( function(el)
+		Element.implement('cleardefault', function()
 		{
-			if (el.get('type') == 'password')
+			var el = this;
+			if (el.get('tag') == 'input' && el.get('type') == 'password')
 			{
 				var text = new Element('input', {
 					'type': 'text',
@@ -28,7 +29,7 @@ window.addEvent('domready', function()
 					}
 				});
 			}
-			else
+			else if ((el.get('tag') == 'input' && ['text', 'search', 'url', 'tel', 'email'].contains(el.get('type'))) || el.get('tag') == 'textarea')
 			{
 				if (el.value == '')
 				{
@@ -57,5 +58,13 @@ window.addEvent('domready', function()
 				});
 			}
 		});
+		
+		document.getElements('input[placeholder], textarea').cleardefault();
+	}
+	
+	// Provide an empty "cleardefault" function for modern browsers, so a call to el.cleardefault() will not throw an error
+	else
+	{
+		Element.implement('cleardefault', function(){});
 	}
 });
