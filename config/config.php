@@ -31,5 +31,4 @@
  * Hooks
  */
 $GLOBALS['TL_HOOKS']['loadFormField'][]		= array('ClearDefault', 'addAttributes');
-$GLOBALS['TL_HOOKS']['validateFormField'][]	= array('ClearDefault', 'validateFormField');
 

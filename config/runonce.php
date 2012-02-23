@@ -21,36 +21,52 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2009-2012
+ * @copyright  Andreas Schempp 2012
  * @author     Andreas Schempp <andreas@schempp.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
 
-/**
- * Provide function to add clear default functionality to form fields
- */
-class ClearDefault extends Frontend
+class ClearDefaultRunonce extends Controller
 {
 
 	/**
-	 * Add cleardefault-javascript
+	 * Initialize the object
 	 */
-	public function addAttributes($objWidget, $formId)
+	public function __construct()
 	{
-		if ($objWidget->placeholder != '')
+		parent::__construct();
+		
+		// Fix potential Exception on line 0 because of __destruct method (see http://dev.contao.org/issues/2236)
+		$this->import((TL_MODE=='BE' ? 'BackendUser' : 'FrontendUser'), 'User');
+		$this->import('Database');
+	}
+
+
+	/**
+	 * Execute all runonce files in module config directories
+	 */
+	public function run()
+	{
+		if (!$this->Database->fieldExists('cleardefault', 'tl_form_field'))
 		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/html/cleardefault.js';
-			
-			// Unset POST value if the default was submitted
-			if ($this->Input->post($objWidget->name, true) == $objWidget->placeholder)
-			{
-				$this->Input->setPost($objWidget->name, null);
-				unset($_SESSION['FORM_DATA'][$objWidget->name]);
-			}
+			return;
 		}
 		
-		return $objWidget;
+		if (!$this->Database->fieldExists('placeholder', 'tl_form_field'))
+		{
+			$this->Database->query("ALTER TABLE tl_form_field ADD `placeholder` varchar(255) NOT NULL default ''");
+		}
+		
+		$this->Database->query("UPDATE tl_form_field SET placeholder=value, value='' WHERE cleardefault='1' AND placeholder=''");
+		$this->Database->query("ALTER TABLE tl_form_field DROP `cleardefault`");
 	}
 }
+
+
+/**
+ * Instantiate controller
+ */
+$objClearDefaultRunonce = new ClearDefaultRunonce();
+$objClearDefaultRunonce->run();
 
