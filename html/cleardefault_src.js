@@ -29,7 +29,7 @@ window.addEvent('domready', function()
 					}
 				});
 			}
-            else if (((el.get('tag') == 'input' && ['text', 'search', 'url', 'tel', 'email'].contains(el.get('type'))) || (el.get('tag') == 'textarea')) && el.get('placeholder'))
+            else if (el.get('placeholder') && ((el.get('tag') == 'input' && ['text', 'search', 'url', 'tel', 'email'].contains(el.get('type'))) || (el.get('tag') == 'textarea')))
 			{
 				if (el.value == '')
 				{
