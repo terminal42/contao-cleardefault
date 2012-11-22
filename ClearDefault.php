@@ -10,12 +10,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
@@ -41,15 +41,53 @@ class ClearDefault extends Frontend
 		if ($objWidget->placeholder != '')
 		{
 			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/html/cleardefault.js';
-			
+
 			// Unset POST value if the default was submitted
 			if ($this->Input->post($objWidget->name, true) == $objWidget->placeholder)
 			{
 				$this->Input->setPost($objWidget->name, null);
 				unset($_SESSION['FORM_DATA'][$objWidget->name]);
 			}
+
+			global $objPage;
+
+			// Create a decorator that will output the placeholder attribute
+			if ($objPage->outputFormat != 'html5')
+			{
+				// Hack XHTML output
+				$strClass = get_class($objWidget);
+
+				if (!class_exists($strClass . 'ClearDefault', false))
+				{
+					eval('
+class ' . $strClass . 'ClearDefault extends ' . $strClass . '
+{
+	public function getAttributes($arrStrip=array())
+	{
+		$strPlaceholder = $this->placeholder;
+		$strAttributes = parent::getAttributes($arrStrip);
+
+		if ($strPlaceholder != \'\')
+		{
+			$strAttributes .= \' placeholder="\' . $strPlaceholder . \'"\';
 		}
-		
+
+		return $strAttributes;
+	}
+}');
+
+
+				}
+
+				$strObject = serialize($objWidget);
+				$intClassLength = strlen($strClass);
+				$intClassChars = strlen($intClassLength);
+				$strObject = 'O:' . strlen($strClass.'ClearDefault') . ':"' . $strClass.'ClearDefault":' . substr($strObject, ($intClassChars + $intClassLength + 6));
+
+				$objWidget = unserialize($strObject);
+			}
+		}
+
 		return $objWidget;
 	}
 }
