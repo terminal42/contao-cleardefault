@@ -51,10 +51,9 @@ class ClearDefault extends Frontend
 
 			global $objPage;
 
-			// Create a decorator that will output the placeholder attribute
-			if ($objPage->outputFormat != 'html5')
+			// Create class that will output the placeholder attribute
+			if ($objPage->outputFormat == 'xhtml')
 			{
-				// Hack XHTML output
 				$strClass = get_class($objWidget);
 
 				if (!class_exists($strClass . 'ClearDefault', false))
@@ -75,10 +74,9 @@ class ' . $strClass . 'ClearDefault extends ' . $strClass . '
 		return $strAttributes;
 	}
 }');
-
-
 				}
 
+				// Serialize widget and unserialize into new class
 				$strObject = serialize($objWidget);
 				$intClassLength = strlen($strClass);
 				$intClassChars = strlen($intClassLength);
