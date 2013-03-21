@@ -1,6 +1,10 @@
 cleardefault Changelog
 ======================
 
+Version 2.1.0 stable (2013-03-21)
+---------------------------------
+- Added compatibility for Contao 3
+
 
 Version 2.0.0 stable (2012-10-12)
 ---------------------------------
