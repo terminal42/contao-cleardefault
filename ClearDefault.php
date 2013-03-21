@@ -40,7 +40,7 @@ class ClearDefault extends Frontend
 	{
 		if ($objWidget->placeholder != '')
 		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/html/cleardefault.js';
+			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/assets/cleardefault.min.js';
 
 			// Unset POST value if the default was submitted
 			if ($this->Input->post($objWidget->name, true) == $objWidget->placeholder)
