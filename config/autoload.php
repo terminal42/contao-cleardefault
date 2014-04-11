@@ -34,3 +34,12 @@ ClassLoader::addClasses(array
 (
 	'ClearDefault'         => 'system/modules/cleardefault/ClearDefault.php',
 ));
+
+/**
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+    'moo_cleardefault'      => 'system/modules/cleardefault/templates',
+    'j_cleardefault'        => 'system/modules/cleardefault/templates',
+));
