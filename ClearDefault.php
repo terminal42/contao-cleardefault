@@ -30,7 +30,7 @@
 /**
  * Provide function to add clear default functionality to form fields
  */
-class ClearDefault extends Frontend
+class ClearDefault extends \Frontend
 {
 
 	/**
@@ -38,52 +38,10 @@ class ClearDefault extends Frontend
 	 */
 	public function addAttributes($objWidget, $formId)
 	{
-		if ($objWidget->placeholder != '')
+		if ($objWidget->placeholder != '' && $objWidget->placeholder == \Input::post($objWidget->name, true))
 		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/cleardefault/assets/cleardefault.min.js';
-
-			// Unset POST value if the default was submitted
-			if ($this->Input->post($objWidget->name, true) == $objWidget->placeholder)
-			{
-				$this->Input->setPost($objWidget->name, null);
-				unset($_SESSION['FORM_DATA'][$objWidget->name]);
-			}
-
-			global $objPage;
-
-			// Create class that will output the placeholder attribute
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$strClass = get_class($objWidget);
-
-				if (!class_exists($strClass . 'ClearDefault', false))
-				{
-					eval('
-class ' . $strClass . 'ClearDefault extends ' . $strClass . '
-{
-	public function getAttributes($arrStrip=array())
-	{
-		$strPlaceholder = $this->placeholder;
-		$strAttributes = parent::getAttributes($arrStrip);
-
-		if ($strPlaceholder != \'\')
-		{
-			$strAttributes .= \' placeholder="\' . $strPlaceholder . \'"\';
-		}
-
-		return $strAttributes;
-	}
-}');
-				}
-
-				// Serialize widget and unserialize into new class
-				$strObject = serialize($objWidget);
-				$intClassLength = strlen($strClass);
-				$intClassChars = strlen($intClassLength);
-				$strObject = 'O:' . strlen($strClass.'ClearDefault') . ':"' . $strClass.'ClearDefault":' . substr($strObject, ($intClassChars + $intClassLength + 6));
-
-				$objWidget = unserialize($strObject);
-			}
+			\Input::setPost($objWidget->name, null);
+			unset($_SESSION['FORM_DATA'][$objWidget->name]);
 		}
 
 		return $objWidget;
