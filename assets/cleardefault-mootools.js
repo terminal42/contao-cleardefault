@@ -19,7 +19,7 @@ window.addEvent('domready', function()
 						}
 					}
 				}).inject(el, 'before');
-				
+
 				el.hide().addEvent('blur', function()
 				{
 					if (el.value == '')
@@ -36,7 +36,7 @@ window.addEvent('domready', function()
 					el.addClass('cleardefault');
 					el.value = el.get('placeholder');
 				}
-				
+
 				el.addEvents(
 				{
 					'focus': function()
@@ -58,10 +58,10 @@ window.addEvent('domready', function()
 				});
 			}
 		});
-		
+
 		document.getElements('input[placeholder], textarea').cleardefault();
 	}
-	
+
 	// Provide an empty "cleardefault" function for modern browsers, so a call to el.cleardefault() will not throw an error
 	else
 	{
